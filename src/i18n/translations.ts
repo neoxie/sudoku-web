@@ -20,6 +20,9 @@ export const translations = {
       reset: '重置',
       clear: '清空',
       loadSample: '加载示例：',
+      easy: '简单',
+      medium: '中等',
+      hard: '困难',
     },
     // Messages
     messages: {
@@ -59,6 +62,9 @@ export const translations = {
       reset: 'Reset to Original',
       clear: 'Clear Board',
       loadSample: 'Load Sample:',
+      easy: 'Easy',
+      medium: 'Medium',
+      hard: 'Hard',
     },
     // Messages
     messages: {

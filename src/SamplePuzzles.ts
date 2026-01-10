@@ -2,11 +2,12 @@ import type { Puzzle } from './types';
 
 /**
  * Sample Sudoku puzzles of varying difficulties
+ * Each puzzle has a nameKey for i18n lookup
  */
 
 export const samplePuzzles: Puzzle[] = [
   {
-    name: 'Easy',
+    nameKey: 'easy',
     difficulty: 'easy',
     board: [
       [5, 3, 0, 0, 7, 0, 0, 0, 0],
@@ -21,7 +22,7 @@ export const samplePuzzles: Puzzle[] = [
     ],
   },
   {
-    name: 'Medium',
+    nameKey: 'medium',
     difficulty: 'medium',
     board: [
       [0, 0, 0, 2, 6, 0, 7, 0, 1],
@@ -36,7 +37,7 @@ export const samplePuzzles: Puzzle[] = [
     ],
   },
   {
-    name: 'Hard',
+    nameKey: 'hard',
     difficulty: 'hard',
     board: [
       [0, 0, 0, 7, 0, 0, 0, 0, 0],

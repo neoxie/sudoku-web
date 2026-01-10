@@ -7,7 +7,7 @@ export type Board = number[][];  // 9x9 grid, 0 = empty
 export type CellState = 'given' | 'solved' | 'error';
 
 export interface Puzzle {
-  name: string;
+  nameKey: string; // Translation key for i18n lookup
   difficulty: 'easy' | 'medium' | 'hard';
   board: Board;
 }
