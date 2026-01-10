@@ -60,12 +60,6 @@ body {
   min-width: 0; /* Prevent grid blowout */
 }
 
-.game-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
 /* Message banners */
 .message {
   grid-column: 1 / -1;
@@ -89,15 +83,22 @@ body {
   border: 1px solid #f5c6cb;
 }
 
-/* Instructions sidebar (right column) */
+/* Sidebar (right column) */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+/* Instructions section within sidebar */
 .instructions {
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
   border-left: 4px solid #667eea;
-  height: fit-content;
-  position: sticky;
-  top: 20px;
 }
 
 .instructions h3 {
@@ -167,7 +168,7 @@ body {
     max-width: 600px;
   }
 
-  .instructions {
+  .sidebar {
     position: static;
     order: 2;
   }

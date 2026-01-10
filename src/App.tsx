@@ -112,40 +112,36 @@ function AppContent() {
         )}
 
         <div className="game-area">
-          <div className="game-content">
-            <SudokuGrid
-              board={currentBoard}
-              originalBoard={originalBoard}
-              onCellChange={handleCellChange}
-              disabled={hasSolution}
-            />
-
-            <Controls
-              onSolve={handleSolve}
-              onClear={handleClear}
-              onReset={handleReset}
-              onLoadPuzzle={handleLoadPuzzle}
-              isSolving={isSolving}
-              hasSolution={hasSolution}
-              isBoardEmpty={isBoardEmpty()}
-              samplePuzzles={samplePuzzles}
-            />
-          </div>
+          <SudokuGrid
+            board={currentBoard}
+            originalBoard={originalBoard}
+            onCellChange={handleCellChange}
+            disabled={hasSolution}
+          />
         </div>
 
-        <aside className="instructions">
-          <h3>{t('instructions.title')}</h3>
-          <ol>
-            {tArray('instructions.steps').map((step: string, index: number) => (
-              <li key={index}>{step}</li>
-            ))}
-          </ol>
+        <aside className="sidebar">
+          <Controls
+            onSolve={handleSolve}
+            onClear={handleClear}
+            onReset={handleReset}
+            onLoadPuzzle={handleLoadPuzzle}
+            isSolving={isSolving}
+            hasSolution={hasSolution}
+            isBoardEmpty={isBoardEmpty()}
+            samplePuzzles={samplePuzzles}
+          />
+
+          <div className="instructions">
+            <h3>{t('instructions.title')}</h3>
+            <ol>
+              {tArray('instructions.steps').map((step: string, index: number) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ol>
+          </div>
         </aside>
       </main>
-
-      <footer className="app-footer">
-        <p>{t('footer')}</p>
-      </footer>
     </div>
   );
 }
