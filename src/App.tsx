@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
 import { SudokuGrid } from './SudokuGrid';
 import { Controls } from './Controls';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { samplePuzzles } from './SamplePuzzles';
 import {
   createEmptyBoard,
@@ -11,10 +13,12 @@ import type { Board, Puzzle } from './types';
 import './App.css';
 
 /**
- * Main Application Component
+ * Main Application Content Component
  * Manages state and orchestrates the Sudoku solving experience
  */
-function App() {
+function AppContent() {
+  const { t, tArray } = useLanguage();
+
   const [originalBoard, setOriginalBoard] = useState<Board>(createEmptyBoard());
   const [currentBoard, setCurrentBoard] = useState<Board>(createEmptyBoard());
   const [isSolving, setIsSolving] = useState(false);
@@ -37,7 +41,7 @@ function App() {
 
   const handleSolve = useCallback(() => {
     if (isBoardEmpty()) {
-      setMessage({ type: 'error', text: 'Please enter some numbers first!' });
+      setMessage({ type: 'error', text: t('messages.emptyBoard') });
       return;
     }
 
@@ -57,17 +61,17 @@ function App() {
         setHasSolution(true);
         setMessage({
           type: 'success',
-          text: `Solved in ${(endTime - startTime).toFixed(2)}ms!`,
+          text: t('messages.solveSuccess', ((endTime - startTime).toFixed(2))),
         });
       } else {
         setMessage({
           type: 'error',
-          text: 'No solution exists for this puzzle. Please check your input.',
+          text: t('messages.noSolution'),
         });
       }
       setIsSolving(false);
     }, 100);
-  }, [currentBoard, isBoardEmpty]);
+  }, [currentBoard, isBoardEmpty, t]);
 
   const handleClear = useCallback(() => {
     const emptyBoard = createEmptyBoard();
@@ -93,9 +97,11 @@ function App() {
 
   return (
     <div className="app">
+      <LanguageSwitcher />
+
       <header className="app-header">
-        <h1>🎯 Sudoku Solver</h1>
-        <p className="subtitle">Enter a puzzle or load a sample to get started</p>
+        <h1>{t('app.title')}</h1>
+        <p className="subtitle">{t('app.subtitle')}</p>
       </header>
 
       <main className="app-main">
@@ -105,40 +111,54 @@ function App() {
           </div>
         )}
 
-        <SudokuGrid
-          board={currentBoard}
-          originalBoard={originalBoard}
-          onCellChange={handleCellChange}
-          disabled={hasSolution}
-        />
+        <div className="game-area">
+          <div className="game-content">
+            <SudokuGrid
+              board={currentBoard}
+              originalBoard={originalBoard}
+              onCellChange={handleCellChange}
+              disabled={hasSolution}
+            />
 
-        <Controls
-          onSolve={handleSolve}
-          onClear={handleClear}
-          onReset={handleReset}
-          onLoadPuzzle={handleLoadPuzzle}
-          isSolving={isSolving}
-          hasSolution={hasSolution}
-          isBoardEmpty={isBoardEmpty()}
-          samplePuzzles={samplePuzzles}
-        />
-
-        <div className="instructions">
-          <h3>How to Use</h3>
-          <ol>
-            <li>Click on a cell and enter a number (1-9), or load a sample puzzle</li>
-            <li>Fill in the known numbers of your Sudoku puzzle</li>
-            <li>Click <strong>"Solve Puzzle"</strong> to find the solution</li>
-            <li>Use <strong>"Reset"</strong> to restore your original input</li>
-            <li>Use <strong>"Clear"</strong> to start over with an empty board</li>
-          </ol>
+            <Controls
+              onSolve={handleSolve}
+              onClear={handleClear}
+              onReset={handleReset}
+              onLoadPuzzle={handleLoadPuzzle}
+              isSolving={isSolving}
+              hasSolution={hasSolution}
+              isBoardEmpty={isBoardEmpty()}
+              samplePuzzles={samplePuzzles}
+            />
+          </div>
         </div>
+
+        <aside className="instructions">
+          <h3>{t('instructions.title')}</h3>
+          <ol>
+            {tArray('instructions.steps').map((step: string, index: number) => (
+              <li key={index}>{step}</li>
+            ))}
+          </ol>
+        </aside>
       </main>
 
       <footer className="app-footer">
-        <p>Built with React + TypeScript • Backtracking Algorithm</p>
+        <p>{t('footer')}</p>
       </footer>
     </div>
+  );
+}
+
+/**
+ * Main Application Component
+ * Wraps content with LanguageProvider for i18n support
+ */
+function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }
 

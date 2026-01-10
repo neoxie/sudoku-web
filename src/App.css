@@ -41,9 +41,13 @@ body {
   margin: 0;
 }
 
+/* Two-column layout for main content */
 .app-main {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
   width: 100%;
-  max-width: 600px;
+  max-width: 1000px;
   background: white;
   border-radius: 16px;
   padding: 30px;
@@ -51,11 +55,23 @@ body {
   animation: fadeInUp 0.6s ease-out;
 }
 
+/* Game area (left column) */
+.game-area {
+  min-width: 0; /* Prevent grid blowout */
+}
+
+.game-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 /* Message banners */
 .message {
+  grid-column: 1 / -1;
   padding: 15px 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   font-weight: 600;
   text-align: center;
   animation: slideIn 0.3s ease-out;
@@ -73,30 +89,33 @@ body {
   border: 1px solid #f5c6cb;
 }
 
-/* Instructions section */
+/* Instructions sidebar (right column) */
 .instructions {
-  margin-top: 30px;
   padding: 20px;
   background-color: #f8f9fa;
   border-radius: 8px;
   border-left: 4px solid #667eea;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
 }
 
 .instructions h3 {
   margin: 0 0 15px 0;
   color: #2c3e50;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
 }
 
 .instructions ol {
   margin: 0;
   padding-left: 20px;
   color: #495057;
-  line-height: 1.8;
+  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .instructions li {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .app-footer {
@@ -142,6 +161,26 @@ body {
 }
 
 /* Responsive design */
+@media (max-width: 900px) {
+  .app-main {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+
+  .instructions {
+    position: static;
+    order: 2;
+  }
+
+  .game-area {
+    order: 1;
+  }
+
+  .message {
+    grid-column: 1;
+  }
+}
+
 @media (max-width: 600px) {
   .app-header h1 {
     font-size: 2rem;
@@ -167,5 +206,9 @@ body {
 
   .app-main {
     padding: 15px;
+  }
+
+  .instructions ol {
+    font-size: 0.9rem;
   }
 }
