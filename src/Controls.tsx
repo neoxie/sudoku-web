@@ -1,4 +1,5 @@
 import type { Puzzle } from './types';
+import { useLanguage } from './i18n/LanguageContext';
 import './Controls.css';
 
 interface ControlsProps {
@@ -26,6 +27,8 @@ export const Controls: React.FC<ControlsProps> = ({
   isBoardEmpty,
   samplePuzzles,
 }) => {
+  const { t } = useLanguage();
+
   return (
     <div className="controls">
       <div className="control-row">
@@ -37,10 +40,10 @@ export const Controls: React.FC<ControlsProps> = ({
           {isSolving ? (
             <>
               <span className="spinner" />
-              Solving...
+              {t('controls.solving')}
             </>
           ) : (
-            'Solve Puzzle'
+            t('controls.solve')
           )}
         </button>
 
@@ -49,7 +52,7 @@ export const Controls: React.FC<ControlsProps> = ({
           onClick={onReset}
           disabled={!hasSolution && isBoardEmpty}
         >
-          Reset to Original
+          {t('controls.reset')}
         </button>
 
         <button
@@ -57,12 +60,12 @@ export const Controls: React.FC<ControlsProps> = ({
           onClick={onClear}
           disabled={isBoardEmpty}
         >
-          Clear Board
+          {t('controls.clear')}
         </button>
       </div>
 
       <div className="control-row sample-section">
-        <span className="sample-label">Load Sample:</span>
+        <span className="sample-label">{t('controls.loadSample')}</span>
         {samplePuzzles.map((puzzle) => (
           <button
             key={puzzle.name}
