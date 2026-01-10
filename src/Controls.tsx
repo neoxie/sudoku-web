@@ -68,11 +68,11 @@ export const Controls: React.FC<ControlsProps> = ({
         <span className="sample-label">{t('controls.loadSample')}</span>
         {samplePuzzles.map((puzzle) => (
           <button
-            key={puzzle.name}
+            key={puzzle.nameKey}
             className={`btn btn-sample ${puzzle.difficulty}`}
             onClick={() => onLoadPuzzle(puzzle)}
           >
-            {puzzle.name}
+            {t(`controls.${puzzle.nameKey}` as any)}
           </button>
         ))}
       </div>
