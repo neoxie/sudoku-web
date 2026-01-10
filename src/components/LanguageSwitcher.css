@@ -1,10 +1,7 @@
 /* Language Switcher Styles */
 
 .language-switcher {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
+  /* No container styles needed when placed in header */
 }
 
 .lang-btn {
