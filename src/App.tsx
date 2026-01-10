@@ -23,7 +23,13 @@ function AppContent() {
   const [currentBoard, setCurrentBoard] = useState<Board>(createEmptyBoard());
   const [isSolving, setIsSolving] = useState(false);
   const [hasSolution, setHasSolution] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Store message key and params for dynamic translation on language change
+  const [message, setMessage] = useState<{
+    type: 'success' | 'error';
+    key: string;
+    params?: string[];
+  } | null>(null);
 
   const isBoardEmpty = useCallback(() => {
     return currentBoard.every(row => row.every(cell => cell === 0));
@@ -41,7 +47,7 @@ function AppContent() {
 
   const handleSolve = useCallback(() => {
     if (isBoardEmpty()) {
-      setMessage({ type: 'error', text: t('messages.emptyBoard') });
+      setMessage({ type: 'error', key: 'messages.emptyBoard' });
       return;
     }
 
@@ -61,17 +67,18 @@ function AppContent() {
         setHasSolution(true);
         setMessage({
           type: 'success',
-          text: t('messages.solveSuccess', ((endTime - startTime).toFixed(2))),
+          key: 'messages.solveSuccess',
+          params: [((endTime - startTime).toFixed(2))],
         });
       } else {
         setMessage({
           type: 'error',
-          text: t('messages.noSolution'),
+          key: 'messages.noSolution',
         });
       }
       setIsSolving(false);
     }, 100);
-  }, [currentBoard, isBoardEmpty, t]);
+  }, [currentBoard, isBoardEmpty]);
 
   const handleClear = useCallback(() => {
     const emptyBoard = createEmptyBoard();
@@ -97,17 +104,15 @@ function AppContent() {
 
   return (
     <div className="app">
-      <LanguageSwitcher />
-
       <header className="app-header">
-        <h1>{t('app.title')}</h1>
-        <p className="subtitle">{t('app.subtitle')}</p>
+        <h2>{t('app.title')}</h2>
+        <LanguageSwitcher />
       </header>
 
       <main className="app-main">
         {message && (
           <div className={`message message-${message.type}`}>
-            {message.text}
+            {message.params ? t(message.key, ...message.params) : t(message.key)}
           </div>
         )}
 
