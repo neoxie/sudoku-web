@@ -6,17 +6,20 @@ interface SudokuGridProps {
   originalBoard: Board;
   onCellChange: (row: number, col: number, value: string) => void;
   disabled?: boolean;
+  incorrectCells?: [number, number][];
 }
 
 /**
  * 9x9 Sudoku Grid Component
  * Features individual cell inputs with validation and visual states
+ * Supports game mode with error highlighting
  */
 export const SudokuGrid: React.FC<SudokuGridProps> = ({
   board,
   originalBoard,
   onCellChange,
   disabled = false,
+  incorrectCells = [],
 }) => {
   const handleCellChange = (row: number, col: number, value: string) => {
     // Allow only 1-9 or empty
@@ -44,8 +47,14 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({
       if (originalValue !== 0) {
         classes.push('given'); // User provided or original puzzle
       } else {
-        classes.push('solved'); // Solver filled
+        classes.push('solved'); // Solver filled or user entered in game mode
       }
+    }
+
+    // Check if this cell is marked as incorrect (game mode)
+    const isIncorrect = incorrectCells.some(([r, c]) => r === row && c === col);
+    if (isIncorrect) {
+      classes.push('error');
     }
 
     return classes.join(' ');

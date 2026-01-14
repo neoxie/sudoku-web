@@ -84,6 +84,13 @@ body {
   animation: slideIn 0.3s ease-out;
 }
 
+/* Mode switcher container */
+.mode-switcher-container {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+}
+
 .message-success {
   background-color: #d4edda;
   color: #155724;

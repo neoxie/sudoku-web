@@ -11,7 +11,14 @@ export const translations = {
     // App Header
     app: {
       title: '🎯 数独求解器',
+      titleGame: '🧩 数独游戏',
       subtitle: '输入谜题或加载示例开始',
+      subtitleGame: '挑战 yourself - 生成新谜题开始游戏',
+    },
+    // Mode Switcher
+    mode: {
+      solver: '求解器模式',
+      game: '游戏模式',
     },
     // Controls
     controls: {
@@ -23,12 +30,25 @@ export const translations = {
       easy: '简单',
       medium: '中等',
       hard: '困难',
+      // Game mode controls
+      newGame: '新游戏',
+      check: '检查答案',
+      hint: '提示',
+      giveUp: '放弃',
     },
     // Messages
     messages: {
       emptyBoard: '请先输入一些数字！',
       solveSuccess: (ms: string) => `求解成功！耗时 ${ms} 毫秒`,
       noSolution: '此谜题无解，请检查输入。',
+      // Game mode messages
+      puzzleGenerated: '新谜题已生成！',
+      puzzleCorrect: '🎉 恭喜！答案完全正确！',
+      puzzleIncorrect: (n: string) => `发现 ${n} 个错误，请检查红色标记的单元格`,
+      puzzleIncomplete: '还有空单元格未填写',
+      hintUsed: '已填入一个提示数字',
+      noMoreHints: '没有更多提示了',
+      gameSolved: '🏆 太棒了！你完成了数独！',
     },
     // Instructions
     instructions: {
@@ -40,6 +60,21 @@ export const translations = {
         '使用「重置」恢复原始输入',
         '使用「清空」重新开始',
       ],
+      gameTitle: '游戏说明',
+      gameSteps: [
+        '点击「新游戏」生成一个随机数独谜题',
+        '点击空单元格并输入数字（1-9）',
+        '使用「检查答案」验证你的解答',
+        '遇到困难可使用「提示」获取帮助',
+        '完成所有单元格即可获胜！',
+      ],
+    },
+    // Game Stats
+    stats: {
+      title: '游戏进度',
+      filled: '已填：',
+      empty: '剩余：',
+      progress: '进度：',
     },
     // Footer
     footer: '使用 React + TypeScript 构建 • 回溯算法',
@@ -53,7 +88,14 @@ export const translations = {
     // App Header
     app: {
       title: '🎯 Sudoku Solver',
+      titleGame: '🧩 Sudoku Game',
       subtitle: 'Enter a puzzle or load a sample to get started',
+      subtitleGame: 'Challenge yourself - Generate a new puzzle to play',
+    },
+    // Mode Switcher
+    mode: {
+      solver: 'Solver Mode',
+      game: 'Game Mode',
     },
     // Controls
     controls: {
@@ -65,12 +107,25 @@ export const translations = {
       easy: 'Easy',
       medium: 'Medium',
       hard: 'Hard',
+      // Game mode controls
+      newGame: 'New Game',
+      check: 'Check Answer',
+      hint: 'Hint',
+      giveUp: 'Give Up',
     },
     // Messages
     messages: {
       emptyBoard: 'Please enter some numbers first!',
       solveSuccess: (ms: string) => `Solved in ${ms}ms!`,
       noSolution: 'No solution exists for this puzzle. Please check your input.',
+      // Game mode messages
+      puzzleGenerated: 'New puzzle generated!',
+      puzzleCorrect: '🎉 Congratulations! Your answer is completely correct!',
+      puzzleIncorrect: (n: string) => `Found ${n} errors. Check the cells marked in red`,
+      puzzleIncomplete: 'There are still empty cells to fill',
+      hintUsed: 'A hint number has been filled in',
+      noMoreHints: 'No more hints available',
+      gameSolved: '🏆 Excellent! You completed the Sudoku!',
     },
     // Instructions
     instructions: {
@@ -82,6 +137,21 @@ export const translations = {
         'Use "Reset" to restore your original input',
         'Use "Clear" to start over with an empty board',
       ],
+      gameTitle: 'How to Play',
+      gameSteps: [
+        'Click "New Game" to generate a random Sudoku puzzle',
+        'Click on empty cells and enter numbers (1-9)',
+        'Use "Check Answer" to verify your solution',
+        'Use "Hint" when you need help',
+        'Complete all cells to win!',
+      ],
+    },
+    // Game Stats
+    stats: {
+      title: 'Game Progress',
+      filled: 'Filled: ',
+      empty: 'Remaining: ',
+      progress: 'Progress: ',
     },
     // Footer
     footer: 'Built with React + TypeScript • Backtracking Algorithm',

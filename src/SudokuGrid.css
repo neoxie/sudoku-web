@@ -77,6 +77,25 @@
   }
 }
 
+/* Error cells - incorrect answers in game mode */
+.sudoku-cell.error {
+  background-color: #fee;
+  color: #c00;
+  animation: errorCell 0.3s ease-in-out;
+}
+
+@keyframes errorCell {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
 /* Responsive design */
 @media (max-width: 600px) {
   .sudoku-grid {

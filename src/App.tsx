@@ -1,6 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { SudokuGrid } from './SudokuGrid';
 import { Controls } from './Controls';
+import { ModeSwitcher } from './components/ModeSwitcher';
+import { GameStats } from './components/GameStats';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { samplePuzzles } from './SamplePuzzles';
@@ -9,20 +11,38 @@ import {
   copyBoard,
   solveSudoku,
 } from './solver';
-import type { Board, Puzzle } from './types';
+import {
+  generatePuzzle,
+  validateBoard,
+  getHint,
+  getPuzzleStats,
+} from './game';
+import type { Board, Puzzle, GameMode, Difficulty, GameStats as GameStatsType } from './types';
 import './App.css';
 
 /**
  * Main Application Content Component
- * Manages state and orchestrates the Sudoku solving experience
+ * Manages state and orchestrates the Sudoku solving and gaming experience
  */
 function AppContent() {
   const { t, tArray } = useLanguage();
 
+  // Mode state
+  const [mode, setMode] = useState<GameMode>('solver');
+
+  // Board state
   const [originalBoard, setOriginalBoard] = useState<Board>(createEmptyBoard());
   const [currentBoard, setCurrentBoard] = useState<Board>(createEmptyBoard());
+
+  // Solver mode state
   const [isSolving, setIsSolving] = useState(false);
   const [hasSolution, setHasSolution] = useState(false);
+
+  // Game mode state
+  const [solution, setSolution] = useState<Board | null>(null);
+  const [gameDifficulty, setGameDifficulty] = useState<Difficulty>('medium');
+  const [incorrectCells, setIncorrectCells] = useState<[number, number][]>([]);
+  const [isGameComplete, setIsGameComplete] = useState(false);
 
   // Store message key and params for dynamic translation on language change
   const [message, setMessage] = useState<{
@@ -36,15 +56,32 @@ function AppContent() {
   }, [currentBoard]);
 
   const handleCellChange = useCallback((row: number, col: number, value: string) => {
-    if (hasSolution) return; // Don't allow editing after solving
+    if (hasSolution && mode === 'solver') return; // Don't allow editing after solving
+    if (isGameComplete) return; // Don't allow editing after game completion
 
     const newValue = value === '' ? 0 : parseInt(value, 10);
     const newBoard = copyBoard(currentBoard);
     newBoard[row][col] = newValue;
     setCurrentBoard(newBoard);
-    setMessage(null);
-  }, [currentBoard, hasSolution]);
 
+    // Real-time validation for game mode - check all filled cells against solution
+    if (mode === 'game' && solution) {
+      const errors: [number, number][] = [];
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          // Check if this cell is filled but incorrect
+          if (newBoard[i][j] !== 0 && newBoard[i][j] !== solution[i][j]) {
+            errors.push([i, j]);
+          }
+        }
+      }
+      setIncorrectCells(errors);
+    }
+
+    setMessage(null);
+  }, [currentBoard, hasSolution, isGameComplete, mode, solution]);
+
+  // Solver mode handlers
   const handleSolve = useCallback(() => {
     if (isBoardEmpty()) {
       setMessage({ type: 'error', key: 'messages.emptyBoard' });
@@ -85,12 +122,16 @@ function AppContent() {
     setOriginalBoard(emptyBoard);
     setCurrentBoard(emptyBoard);
     setHasSolution(false);
+    setSolution(null);
+    setIsGameComplete(false);
+    setIncorrectCells([]);
     setMessage(null);
   }, []);
 
   const handleReset = useCallback(() => {
     setCurrentBoard(copyBoard(originalBoard));
     setHasSolution(false);
+    setIncorrectCells([]);
     setMessage(null);
   }, [originalBoard]);
 
@@ -99,13 +140,90 @@ function AppContent() {
     setOriginalBoard(boardCopy);
     setCurrentBoard(boardCopy);
     setHasSolution(false);
+    setSolution(null);
+    setIsGameComplete(false);
+    setIncorrectCells([]);
     setMessage(null);
   }, []);
+
+  // Game mode handlers
+  const handleNewGame = useCallback((difficulty: Difficulty) => {
+    const { puzzle, solution: newSolution } = generatePuzzle(difficulty);
+    setOriginalBoard(puzzle);
+    setCurrentBoard(puzzle);
+    setSolution(newSolution);
+    setHasSolution(false);
+    setIsGameComplete(false);
+    setIncorrectCells([]);
+    setMessage({ type: 'success', key: 'messages.puzzleGenerated' });
+  }, []);
+
+  const handleCheck = useCallback(() => {
+    if (!solution) {
+      setMessage({ type: 'error', key: 'messages.emptyBoard' });
+      return;
+    }
+
+    const validation = validateBoard(currentBoard, solution);
+
+    if (validation.isComplete && validation.isCorrect) {
+      setIsGameComplete(true);
+      setMessage({ type: 'success', key: 'messages.gameSolved' });
+    } else if (!validation.isComplete) {
+      setMessage({ type: 'error', key: 'messages.puzzleIncomplete' });
+    } else if (validation.incorrectCells.length > 0) {
+      setIncorrectCells(validation.incorrectCells);
+      setMessage({
+        type: 'error',
+        key: 'messages.puzzleIncorrect',
+        params: [validation.incorrectCells.length.toString()],
+      });
+    } else {
+      setMessage({ type: 'success', key: 'messages.puzzleCorrect' });
+    }
+  }, [currentBoard, solution]);
+
+  const handleHint = useCallback(() => {
+    if (!solution) return;
+
+    const hint = getHint(currentBoard, solution);
+    if (hint) {
+      const [row, col, value] = hint;
+      const newBoard = copyBoard(currentBoard);
+      newBoard[row][col] = value;
+      setCurrentBoard(newBoard);
+      setMessage({ type: 'success', key: 'messages.hintUsed' });
+    } else {
+      setMessage({ type: 'success', key: 'messages.noMoreHints' });
+    }
+  }, [currentBoard, solution]);
+
+  const handleGiveUp = useCallback(() => {
+    if (solution) {
+      setCurrentBoard(solution);
+      setIsGameComplete(true);
+      setIncorrectCells([]);
+    }
+  }, [solution]);
+
+  const handleModeChange = useCallback((newMode: GameMode) => {
+    setMode(newMode);
+    // Clear any game-specific state when switching modes
+    if (newMode === 'solver') {
+      setSolution(null);
+      setIsGameComplete(false);
+      setIncorrectCells([]);
+    }
+    handleClear();
+  }, [handleClear]);
+
+  // Calculate game stats for game mode
+  const gameStats: GameStatsType = getPuzzleStats(currentBoard);
 
   return (
     <div className="app">
       <header className="app-header">
-        <h2>{t('app.title')}</h2>
+        <h2>{mode === 'game' ? t('app.titleGame') : t('app.title')}</h2>
         <LanguageSwitcher />
       </header>
 
@@ -116,17 +234,26 @@ function AppContent() {
           </div>
         )}
 
+        <div className="mode-switcher-container">
+          <ModeSwitcher currentMode={mode} onModeChange={handleModeChange} />
+        </div>
+
         <div className="game-area">
           <SudokuGrid
             board={currentBoard}
             originalBoard={originalBoard}
             onCellChange={handleCellChange}
-            disabled={hasSolution}
+            disabled={hasSolution || isGameComplete}
+            incorrectCells={incorrectCells}
           />
         </div>
 
         <aside className="sidebar">
+          {mode === 'game' && <GameStats stats={gameStats} />}
+
           <Controls
+            mode={mode}
+            // Solver mode props
             onSolve={handleSolve}
             onClear={handleClear}
             onReset={handleReset}
@@ -135,12 +262,20 @@ function AppContent() {
             hasSolution={hasSolution}
             isBoardEmpty={isBoardEmpty()}
             samplePuzzles={samplePuzzles}
+            // Game mode props
+            onNewGame={handleNewGame}
+            onCheck={handleCheck}
+            onHint={handleHint}
+            onGiveUp={handleGiveUp}
+            isGameComplete={isGameComplete}
+            gameDifficulty={gameDifficulty}
+            onDifficultyChange={setGameDifficulty}
           />
 
           <div className="instructions">
-            <h3>{t('instructions.title')}</h3>
+            <h3>{mode === 'game' ? t('instructions.gameTitle') : t('instructions.title')}</h3>
             <ol>
-              {tArray('instructions.steps').map((step: string, index: number) => (
+              {(mode === 'game' ? tArray('instructions.gameSteps') : tArray('instructions.steps')).map((step: string, index: number) => (
                 <li key={index}>{step}</li>
               ))}
             </ol>
