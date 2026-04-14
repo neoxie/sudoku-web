@@ -1,170 +1,187 @@
+/* Controls.css - Modern button system */
+
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-3);
 }
 
 .control-row {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .control-row.sample-section {
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border-light);
 }
 
-/* Base button styles */
+/* Base button */
 .btn {
   width: 100%;
-  padding: 10px 14px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: var(--space-2);
 }
 
 .btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .btn:active:not(:disabled) {
   transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
-/* Primary button (Solve) */
+/* Primary button */
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: white;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #5568d3 0%, #65408b 100%);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-primary) 100%);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
 }
 
-/* Secondary buttons (Reset, Clear) */
+/* Secondary buttons */
 .btn-secondary {
-  background-color: #6c757d;
-  color: white;
+  background: var(--color-border-light);
+  color: var(--color-text-secondary);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #5a6268;
+  background: var(--color-border);
+  color: var(--color-text-primary);
 }
 
-/* Danger button (Give Up) */
+/* Danger button */
 .btn-danger {
-  background-color: #dc3545;
-  color: white;
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
 }
 
 .btn-danger:hover:not(:disabled) {
-  background-color: #c82333;
+  background: #FECACA;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
 /* Difficulty select */
 .difficulty-select {
-  flex: 1;
-  padding: 10px 14px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  background-color: white;
-  color: #495057;
+  width: 100%;
+  padding: 10px 16px;
+  border: 1.5px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  font-weight: 500;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
 }
 
 .difficulty-select:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-border);
 }
 
 .difficulty-select:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-ring);
 }
 
-/* Sample puzzle buttons section */
-.sample-section {
-  flex-direction: column;
-  padding-top: 10px;
-  border-top: 1px solid #dee2e6;
-}
-
+/* Sample puzzle section */
 .sample-label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #495057;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   width: 100%;
+}
+
+.sample-buttons {
+  display: flex;
+  gap: var(--space-2);
 }
 
 .btn-sample {
   flex: 1;
   min-width: 0;
-  padding: 10px 12px;
-  font-size: 0.9rem;
-  background-color: #e9ecef;
-  color: #495057;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  background: var(--color-border-light);
+  color: var(--color-text-secondary);
   width: auto;
 }
 
 .btn-sample:hover:not(:disabled) {
-  background-color: #dee2e6;
+  background: var(--color-border);
 }
 
 .btn-sample.easy {
-  background-color: #d4edda;
-  color: #155724;
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
 }
 
 .btn-sample.easy:hover:not(:disabled) {
-  background-color: #c3e6cb;
+  background: #A7F3D0;
 }
 
 .btn-sample.medium {
-  background-color: #fff3cd;
-  color: #856404;
+  background: var(--color-warning-bg);
+  color: #92400E;
 }
 
 .btn-sample.medium:hover:not(:disabled) {
-  background-color: #ffeaa7;
+  background: #FDE68A;
 }
 
 .btn-sample.hard {
-  background-color: #f8d7da;
-  color: #721c24;
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
 }
 
 .btn-sample.hard:hover:not(:disabled) {
-  background-color: #f5c6cb;
+  background: #FECACA;
 }
 
-/* Spinner animation */
+/* Spinner */
 .spinner {
   width: 16px;
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 
 @keyframes spin {
@@ -173,19 +190,15 @@
   }
 }
 
-/* Responsive design - controls are already vertically stacked */
+/* Responsive */
 @media (max-width: 600px) {
   .btn {
-    padding: 14px 16px;
-    font-size: 1rem;
-  }
-
-  .sample-section {
-    flex-direction: column;
+    padding: 12px 16px;
+    font-size: 0.95rem;
   }
 
   .btn-sample {
     width: 100%;
-    padding: 12px 16px;
+    padding: 10px 14px;
   }
 }

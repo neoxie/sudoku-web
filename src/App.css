@@ -1,38 +1,37 @@
-/* App.css - Modern styling for Sudoku Solver */
-
-* {
-  box-sizing: border-box;
-}
+/* App.css - Modern layout for Sudoku */
 
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-family);
 }
 
 .app {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  background: var(--color-bg-start);
+  background: linear-gradient(160deg, var(--color-bg-start) 0%, var(--color-bg-end) 50%, #F5F3FF 100%);
+  padding: var(--space-6);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
+/* Header */
 .app-header {
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   width: 100%;
-  max-width: 1000px;
-  align-self: center;
-  color: white;
-  margin-bottom: 30px;
-  animation: fadeInDown 0.6s ease-out;
+  max-width: 1060px;
+  margin-bottom: var(--space-8);
+  animation: fadeInDown 0.5s ease-out;
+}
+
+.app-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.025em;
+  margin: 0;
 }
 
 .app-header .language-switcher {
@@ -40,48 +39,47 @@ body {
   right: 0;
 }
 
-.app-header h1 {
-  font-size: 2.5rem;
-  margin: 0 0 10px 0;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.subtitle {
-  font-size: 1.1rem;
-  opacity: 0.95;
-  margin: 0;
-}
-
-/* Two-column layout for main content */
+/* Main content card */
 .app-main {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 20px;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-8);
   align-items: start;
   width: 100%;
-  max-width: 1000px;
-  background: white;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: fadeInUp 0.6s ease-out;
-  align-self: center;
+  max-width: 1060px;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-lg);
+  animation: fadeInUp 0.5s ease-out;
 }
 
 /* Game area (left column) */
 .game-area {
-  min-width: 0; /* Prevent grid blowout */
+  min-width: 0;
 }
 
 /* Message banners */
 .message {
   grid-column: 1 / -1;
-  padding: 15px 20px;
-  border-radius: 8px;
-  margin-bottom: 0;
-  font-weight: 600;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 0.9rem;
   text-align: center;
   animation: slideIn 0.3s ease-out;
+}
+
+.message-success {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.message-error {
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 /* Mode switcher container */
@@ -91,29 +89,17 @@ body {
   justify-content: center;
 }
 
-.message-success {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-.message-error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-/* Sidebar (right column) */
+/* Sidebar */
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--space-4);
   height: fit-content;
   position: sticky;
-  top: 20px;
+  top: var(--space-6);
 }
 
-/* When in game mode, stretch sidebar to match board height */
+/* Equal height columns in game mode */
 .app-main:has(.game-stats) {
   align-items: stretch;
 }
@@ -122,45 +108,45 @@ body {
   align-self: stretch;
 }
 
-/* Instructions section within sidebar */
+/* Instructions */
 .instructions {
-  padding: 14px 16px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  border-left: 4px solid #667eea;
+  padding: var(--space-4);
+  background: var(--color-bg-start);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-primary);
 }
 
 .instructions h3 {
-  margin: 0 0 10px 0;
-  color: #2c3e50;
-  font-size: 1rem;
+  margin: 0 0 var(--space-2) 0;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .instructions ol {
-  margin: 0;
   padding-left: 18px;
-  color: #495057;
-  line-height: 1.5;
-  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  font-size: 0.85rem;
 }
 
 .instructions li {
-  margin-bottom: 6px;
+  margin-bottom: var(--space-1);
 }
 
+/* Footer */
 .app-footer {
-  margin-top: 30px;
-  color: white;
+  margin-top: var(--space-8);
+  color: var(--color-text-muted);
   text-align: center;
-  font-size: 0.9rem;
-  opacity: 0.9;
+  font-size: 0.85rem;
 }
 
 /* Animations */
 @keyframes fadeInDown {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-12px);
   }
   to {
     opacity: 1;
@@ -171,7 +157,7 @@ body {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -182,15 +168,15 @@ body {
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
-/* Responsive design */
+/* Responsive */
 @media (max-width: 900px) {
   .app-main {
     grid-template-columns: 1fr;
@@ -212,33 +198,30 @@ body {
 }
 
 @media (max-width: 600px) {
-  .app-header h1 {
-    font-size: 2rem;
+  .app {
+    padding: var(--space-4);
   }
 
-  .subtitle {
-    font-size: 1rem;
+  .app-header h2 {
+    font-size: 1.4rem;
   }
 
   .app-main {
-    padding: 20px;
-  }
-
-  .instructions {
-    padding: 15px;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
   }
 }
 
 @media (max-width: 400px) {
-  .app-header h1 {
-    font-size: 1.5rem;
+  .app {
+    padding: var(--space-2);
+  }
+
+  .app-header h2 {
+    font-size: 1.2rem;
   }
 
   .app-main {
-    padding: 15px;
-  }
-
-  .instructions ol {
-    font-size: 0.9rem;
+    padding: var(--space-4);
   }
 }

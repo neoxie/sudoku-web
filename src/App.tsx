@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { SudokuGrid } from './SudokuGrid';
 import { Controls } from './Controls';
 import { ModeSwitcher } from './components/ModeSwitcher';

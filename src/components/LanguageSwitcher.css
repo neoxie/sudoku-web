@@ -1,30 +1,31 @@
-/* Language Switcher Styles */
+/* LanguageSwitcher.css - Refined toggle */
 
 .language-switcher {
-  /* No container styles needed when placed in header */
+  /* No container styles needed */
 }
 
 .lang-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  color: white;
-  font-size: 0.9rem;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border-light);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-family: var(--font-family);
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-xs);
 }
 
 .lang-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
 .lang-btn:active {
@@ -32,42 +33,37 @@
 }
 
 .lang-flag {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   line-height: 1;
 }
 
 .lang-label {
-  min-width: 50px;
+  min-width: 42px;
   text-align: left;
 }
 
 .lang-arrow {
-  font-size: 0.7rem;
-  opacity: 0.7;
-  transition: transform 0.3s ease;
+  font-size: 0.65rem;
+  opacity: 0.5;
+  transition: transform var(--transition-fast);
 }
 
 .lang-btn:hover .lang-arrow {
-  opacity: 1;
+  opacity: 0.8;
 }
 
 /* Responsive */
 @media (max-width: 600px) {
-  .language-switcher {
-    top: 15px;
-    right: 15px;
-  }
-
   .lang-btn {
-    padding: 6px 12px;
-    font-size: 0.85rem;
+    padding: 5px 10px;
+    font-size: 0.8rem;
   }
 
   .lang-flag {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .lang-label {
-    min-width: 45px;
+    min-width: 36px;
   }
 }
