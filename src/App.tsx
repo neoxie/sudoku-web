@@ -4,6 +4,7 @@ import { Controls } from './Controls';
 import { ModeSwitcher } from './components/ModeSwitcher';
 import { GameStats } from './components/GameStats';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { Toast } from './components/Toast';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 import { samplePuzzles } from './SamplePuzzles';
 import {
@@ -227,13 +228,13 @@ function AppContent() {
         <LanguageSwitcher />
       </header>
 
-      <main className="app-main">
-        {message && (
-          <div className={`message message-${message.type}`}>
-            {message.params ? t(message.key, ...message.params) : t(message.key)}
-          </div>
-        )}
+      {message && (
+        <Toast type={message.type} onClose={() => setMessage(null)}>
+          {message.params ? t(message.key, ...message.params) : t(message.key)}
+        </Toast>
+      )}
 
+      <main className="app-main">
         <div className="mode-switcher-container">
           <ModeSwitcher currentMode={mode} onModeChange={handleModeChange} />
         </div>
