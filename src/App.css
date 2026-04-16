@@ -91,6 +91,8 @@ body {
   background: var(--color-bg-start);
   border-radius: var(--radius-md);
   border-left: 3px solid var(--color-primary);
+  max-height: 180px;
+  overflow-y: auto;
 }
 
 .instructions h3 {
