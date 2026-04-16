@@ -109,6 +109,12 @@
   }
 }
 
+/* Hinted cells - filled by hint button in game mode */
+.sudoku-cell.hinted {
+  background-color: var(--color-info-bg, #E0F2FE);
+  color: var(--color-info, #0284C7);
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .sudoku-grid {

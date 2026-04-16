@@ -7,6 +7,9 @@ interface SudokuGridProps {
   onCellChange: (row: number, col: number, value: string) => void;
   disabled?: boolean;
   incorrectCells?: [number, number][];
+  hintedCells?: [number, number][];
+  onSelectCell?: (row: number, col: number) => void;
+  onCellBlur?: () => void;
 }
 
 /**
@@ -20,6 +23,9 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({
   onCellChange,
   disabled = false,
   incorrectCells = [],
+  hintedCells = [],
+  onSelectCell,
+  onCellBlur,
 }) => {
   const handleCellChange = (row: number, col: number, value: string) => {
     // Allow only 1-9 or empty
@@ -57,6 +63,12 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({
       classes.push('error');
     }
 
+    // Check if this cell was filled by hint
+    const isHinted = hintedCells.some(([r, c]) => r === row && c === col);
+    if (isHinted) {
+      classes.push('hinted');
+    }
+
     return classes.join(' ');
   };
 
@@ -76,6 +88,8 @@ export const SudokuGrid: React.FC<SudokuGridProps> = ({
             className={getCellClassName(rowIndex, colIndex)}
             value={cell === 0 ? '' : cell.toString()}
             onChange={(e) => handleCellChange(rowIndex, colIndex, e.target.value)}
+            onFocus={() => onSelectCell?.(rowIndex, colIndex)}
+            onBlur={() => onCellBlur?.()}
             readOnly={isReadOnly(rowIndex, colIndex)}
             aria-label={`Cell row ${rowIndex + 1}, column ${colIndex + 1}`}
           />

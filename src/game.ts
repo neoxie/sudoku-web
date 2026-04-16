@@ -156,20 +156,6 @@ export function validateBoard(
 }
 
 /**
- * Get a hint for the next empty cell
- */
-export function getHint(board: Board, solution: Board): [number, number, number] | null {
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      if (board[i][j] === 0) {
-        return [i, j, solution[i][j]];
-      }
-    }
-  }
-  return null;
-}
-
-/**
  * Get puzzle statistics
  */
 export function getPuzzleStats(board: Board): {

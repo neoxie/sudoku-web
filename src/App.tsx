@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { SudokuGrid } from './SudokuGrid';
 import { Controls } from './Controls';
 import { ModeSwitcher } from './components/ModeSwitcher';
@@ -15,7 +15,6 @@ import {
 import {
   generatePuzzle,
   validateBoard,
-  getHint,
   getPuzzleStats,
 } from './game';
 import type { Board, Puzzle, GameMode, Difficulty, GameStats as GameStatsType } from './types';
@@ -44,6 +43,17 @@ function AppContent() {
   const [gameDifficulty, setGameDifficulty] = useState<Difficulty>('medium');
   const [incorrectCells, setIncorrectCells] = useState<[number, number][]>([]);
   const [isGameComplete, setIsGameComplete] = useState(false);
+
+  // Cell selection state (game mode)
+  const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
+  const [hintedCells, setHintedCells] = useState<[number, number][]>([]);
+
+  const isHintAvailable = useMemo(() => {
+    if (!selectedCell || !solution || isGameComplete) return false;
+    const [row, col] = selectedCell;
+    if (originalBoard[row][col] !== 0) return false;
+    return true;
+  }, [selectedCell, solution, isGameComplete, originalBoard]);
 
   // Store message key and params for dynamic translation on language change
   const [message, setMessage] = useState<{
@@ -126,6 +136,8 @@ function AppContent() {
     setSolution(null);
     setIsGameComplete(false);
     setIncorrectCells([]);
+    setSelectedCell(null);
+    setHintedCells([]);
     setMessage(null);
   }, []);
 
@@ -156,6 +168,8 @@ function AppContent() {
     setHasSolution(false);
     setIsGameComplete(false);
     setIncorrectCells([]);
+    setSelectedCell(null);
+    setHintedCells([]);
     setMessage({ type: 'success', key: 'messages.puzzleGenerated' });
   }, []);
 
@@ -185,19 +199,38 @@ function AppContent() {
   }, [currentBoard, solution]);
 
   const handleHint = useCallback(() => {
-    if (!solution) return;
+    if (!selectedCell || !solution) return;
+    const [row, col] = selectedCell;
+    if (originalBoard[row][col] !== 0) return;
 
-    const hint = getHint(currentBoard, solution);
-    if (hint) {
-      const [row, col, value] = hint;
-      const newBoard = copyBoard(currentBoard);
-      newBoard[row][col] = value;
-      setCurrentBoard(newBoard);
-      setMessage({ type: 'success', key: 'messages.hintUsed' });
-    } else {
-      setMessage({ type: 'success', key: 'messages.noMoreHints' });
-    }
-  }, [currentBoard, solution]);
+    const newBoard = copyBoard(currentBoard);
+    newBoard[row][col] = solution[row][col];
+    setCurrentBoard(newBoard);
+    setHintedCells(prev => {
+      if (prev.some(([r, c]) => r === row && c === col)) return prev;
+      return [...prev, [row, col]];
+    });
+    setMessage({ type: 'success', key: 'messages.hintUsed' });
+  }, [selectedCell, solution, currentBoard, originalBoard]);
+
+  const handleCellSelect = useCallback((row: number, col: number) => {
+    setSelectedCell([row, col]);
+  }, []);
+
+  const handleCellBlur = useCallback(() => {
+    // Use setTimeout to defer selection clearing until after click handlers fire.
+    // When user clicks Hint button: blur fires first, then click. Without the
+    // delay, selectedCell would be cleared before handleHint can read it.
+    setTimeout(() => {
+      setSelectedCell(prev => {
+        const activeEl = document.activeElement;
+        if (activeEl && activeEl.classList.contains('sudoku-cell')) {
+          return prev; // Focus moved to another cell in the grid
+        }
+        return null;
+      });
+    }, 0);
+  }, []);
 
   const handleGiveUp = useCallback(() => {
     if (solution) {
@@ -211,6 +244,8 @@ function AppContent() {
     setMode(newMode);
     // Clear any game-specific state when switching modes
     if (newMode === 'solver') {
+      setSelectedCell(null);
+      setHintedCells([]);
       setSolution(null);
       setIsGameComplete(false);
       setIncorrectCells([]);
@@ -246,6 +281,9 @@ function AppContent() {
             onCellChange={handleCellChange}
             disabled={hasSolution || isGameComplete}
             incorrectCells={incorrectCells}
+            hintedCells={hintedCells}
+            onSelectCell={handleCellSelect}
+            onCellBlur={handleCellBlur}
           />
         </div>
 
@@ -269,6 +307,7 @@ function AppContent() {
             onHint={handleHint}
             onGiveUp={handleGiveUp}
             isGameComplete={isGameComplete}
+            isHintAvailable={isHintAvailable}
             gameDifficulty={gameDifficulty}
             onDifficultyChange={setGameDifficulty}
           />

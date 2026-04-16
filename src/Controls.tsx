@@ -19,6 +19,7 @@ interface ControlsProps {
   onHint: () => void;
   onGiveUp: () => void;
   isGameComplete: boolean;
+  isHintAvailable: boolean;
   gameDifficulty: Difficulty;
   onDifficultyChange: (difficulty: Difficulty) => void;
 }
@@ -43,6 +44,7 @@ export const Controls: React.FC<ControlsProps> = ({
   onHint,
   onGiveUp,
   isGameComplete,
+  isHintAvailable,
   gameDifficulty,
   onDifficultyChange,
 }) => {
@@ -80,7 +82,7 @@ export const Controls: React.FC<ControlsProps> = ({
           <button
             className="btn btn-secondary"
             onClick={onHint}
-            disabled={isGameComplete}
+            disabled={!isHintAvailable}
           >
             {t('controls.hint')}
           </button>
