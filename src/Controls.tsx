@@ -82,6 +82,7 @@ export const Controls: React.FC<ControlsProps> = ({
           <button
             className="btn btn-secondary"
             onClick={onHint}
+            onMouseDown={(e) => e.preventDefault()}
             disabled={!isHintAvailable}
           >
             {t('controls.hint')}
@@ -141,7 +142,7 @@ export const Controls: React.FC<ControlsProps> = ({
             className={`btn btn-sample ${puzzle.difficulty}`}
             onClick={() => onLoadPuzzle(puzzle)}
           >
-            {t(`controls.${puzzle.nameKey}` as any)}
+            {t(`controls.${puzzle.nameKey}` as Parameters<typeof t>[0])}
           </button>
         ))}
       </div>
